@@ -2,7 +2,7 @@
   <a-layout-header class="navbar">
     <!-- Logo and Brand Name -->
     <div class="logo">
-      <img src="../../assets/logo.svg" alt="Brand Logo" class="logo-image" />
+      <img src="@/assets/logo.svg" alt="Brand Logo" class="logo-image" />
       <span class="brand-name">My Company</span>
     </div>
 
@@ -41,20 +41,33 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { defineEmits } from 'vue';
 
 const router = useRouter();
-const isLoggedIn = ref(false); // Replace with actual login state logic
+const props = defineProps({
+  isLoggedIn: {
+    type: Boolean,
+    required: true,
+  },
+});
+
+// Emit event to notify the parent about logout
+const emit = defineEmits(['update:isLoggedIn']);
 
 const navigateTo = (path) => {
   router.push(path);
 };
 
 const logout = () => {
-  console.log('User logged out');
-  // Perform logout logic here
-  isLoggedIn.value = false;
+  // Clear local storage or perform logout logic
+  localStorage.removeItem('accessToken');
+
+  // Notify the parent about the change
+  emit('update:isLoggedIn', false);
+
+  // Optionally navigate to a different route
+  navigateTo('/login');
 };
 </script>
 
@@ -85,6 +98,9 @@ const logout = () => {
 .menu {
   flex-grow: 1;
   margin-left: 20px;
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
 }
 
 .account-actions {
