@@ -14,10 +14,6 @@ export const loginUser = async (username, password) => {
     if (response.accessToken && response.refreshToken) {
       localStorage.setItem('accessToken', response.accessToken)
       localStorage.setItem('refreshToken', response.refreshToken)
-
-      // const router = useRouter()
-      // router.push('/home')
-
       return response
     } else {
       throw new Error('Invalid response: no tokens')

@@ -28,6 +28,13 @@ const passwordError = ref('');
 
 // Define the emit
 const emit = defineEmits(['submit']);
+const props = defineProps({
+  errorMessages: {
+    type: String,
+    required: false,
+  },
+});
+
 
 const validateForm = () => {
   usernameError.value = username.value ? '' : 'Username is required!';

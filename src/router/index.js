@@ -19,6 +19,11 @@ const router = createRouter({
       name: 'materials',
       component: () => import('../views/tables/MaterialTable.vue'),
     },
+    {
+      path: '/',
+      name: 'home',
+      omponent: () => import('../views/tables/MaterialTable.vue'),
+    },
   ],
 })
 

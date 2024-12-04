@@ -16,7 +16,7 @@
     <div class="account-actions">
       <template v-if="isLoggedIn">
         <a-dropdown>
-          <a-avatar size="large" style="background-color: #87d068">U</a-avatar>
+          <a-avatar size="large" style="background-color: #87d068">{{ username }}</a-avatar>
           <template v-slot:overlay>
             <a-menu>
               <a-menu-item key="profile" @click="navigateTo('/profile')">
@@ -42,9 +42,12 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { defineEmits } from 'vue';
+import { defineEmits, watch, ref } from 'vue';
+import { jwtDecode } from 'jwt-decode';
 
 const router = useRouter();
+const emit = defineEmits(['update:isLoggedIn']);
+
 const props = defineProps({
   isLoggedIn: {
     type: Boolean,
@@ -52,23 +55,38 @@ const props = defineProps({
   },
 });
 
-// Emit event to notify the parent about logout
-const emit = defineEmits(['update:isLoggedIn']);
+const username = ref(''); // To store the decoded username
 
 const navigateTo = (path) => {
   router.push(path);
 };
 
 const logout = () => {
-  // Clear local storage or perform logout logic
   localStorage.removeItem('accessToken');
-
-  // Notify the parent about the change
   emit('update:isLoggedIn', false);
-
-  // Optionally navigate to a different route
   navigateTo('/login');
 };
+
+// Watcher for isLoggedIn
+watch(
+  () => props.isLoggedIn,
+  (newValue) => {
+    if (newValue) {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          username.value = decoded.username || 'User'; // Adjust based on the token's payload structure
+        } catch (err) {
+          console.error('Error decoding token:', err);
+        }
+      }
+    } else {
+      username.value = ''; // Clear username on logout
+    }
+  },
+  { immediate: true } // Trigger the watcher immediately on component load
+);
 </script>
 
 <style scoped>

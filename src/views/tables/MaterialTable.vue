@@ -1,5 +1,6 @@
 <template>
   <h1>Material Table</h1>
+  <a-button type="primary">New</a-button>
   <TableComponent :columns="columns" :dataSource="data" :defaultPageSize="5" :isPaging="true">
     <!-- Action Button Slot -->
     <template #action="{ record }">

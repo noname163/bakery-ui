@@ -1,5 +1,6 @@
 <template>
   <h1>Employee Table</h1>
+  <a-button type="primary">New</a-button>
   <TableComponent :columns="columns" :dataSource="data" :defaultPageSize="5" :isPaging="true">
     <!-- Action Button Slot -->
     <template #action="{ record }">
@@ -38,6 +39,7 @@ async function fetchMaterials() {
     console.log('Fetched materials:', materials);
     data.value = materials.data;
     columns.value = generateColumns(materials.data[0])
+    columns.value.push({ title: 'Action', dataIndex: 'action', key: 'action' });
     console.log("Columns ", columns)
   } catch (error) {
     console.error('Error fetching materials:', error);
